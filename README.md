@@ -1,53 +1,25 @@
 # recguard
 
-Immutability and integrity policy guard for LevitateOS installed systems.
+Policy enforcement and compliance verification for LevitateOS installed-system
+mutability models.
 
-## Scope
+## Canonical Specification
 
-`recguard` enforces installed-system immutability policy.
-It is separate from partitioning (`recpart`) and slot state transitions (`recab`).
+`REQUIREMENTS.md` is the canonical source of truth for behavior, interfaces,
+and conformance requirements.
 
-## Goals
+- Spec file: `tools/recguard/REQUIREMENTS.md`
+- Current version: `0.1.0` (Draft)
 
-- Validate and enforce immutable runtime expectations.
-- Provide explicit policy checks with actionable failures.
-- Integrate with A/B slot workflows as a guardrail, not a slot manager.
+## Scope (Summary)
 
-## Responsibility Boundary
+`recguard` verifies that observed system state conforms to declared policy for
+`ab` and `mutable` modes. It does not partition disks, install payloads, or
+perform slot transitions.
+
+## Tooling Boundary
 
 - `recpart`: partition/layout orchestration
 - `recstrap`/install wrapper: payload installation
-- `recab`: slot select, commit, rollback
-- `recguard`: integrity and immutability policy enforcement
-
-## Planned Policy Areas
-
-- Root mount policy validation (expected read-only behavior).
-- Writable-path policy validation (`/etc`, `/var`, `/home`, etc. by mode).
-- Boot artifact policy checks (expected files and topology).
-- A/B target safety checks (prevent mutating active slot by mistake).
-
-## Future Hardening Hooks
-
-- dm-verity presence and config checks.
-- UKI/signature policy checks.
-- Secure boot state checks where available.
-- Optional measured-boot/attestation hooks.
-
-## Planned Interfaces
-
-- `recguard check --mode <ab|mutable> --root <path>`
-- `recguard check-live` for running system checks.
-- Machine-readable output mode for CI/harness integration.
-
-## Non-Goals
-
-- Creating partitions.
-- Installing payload files.
-- Setting boot target for next reboot.
-
-## Design Principles
-
-- Fail fast, no silent fallback.
-- Deterministic checks and stable diagnostics.
-- Clear remediation commands in every failure path.
+- `recab`: slot selection and commit/rollback
+- `recguard`: policy assertion evaluation and enforcement
